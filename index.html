@@ -99,14 +99,10 @@
     /* blinking / attention effect */
     animation: privateQuoteBlink 1.5s infinite;
 }
-<!-- Điều chỉnh riêng vị trí nút Private Quote bên Flights -->
-<style>
-/* Chỉ đưa nút Private Quote bên Flights lên cao */
-.trip-flight-search .private-quote-btn {
-    top: -38px;
+/* Chỉ nâng nút Private Quote bên Flights */
+.trip-flight-search .flight-private-quote {
+    transform: translateY(-38px);
 }
-</style>
-
 .private-quote-btn:hover {
     background: #385bd4;
     color: #ffffff !important;
@@ -427,7 +423,7 @@
     href="https://wa.me/84797077347?text=Hi%2C%20I%20would%20like%20to%20book%20a%20hotel%20with%20the%20best%20offer."
     target="_blank"
     rel="noopener noreferrer"
-    class="private-quote-btn">
+    class="private-quote-btn Flight-private-quote">
     💬 Private Quote
 </a>
     </div>
