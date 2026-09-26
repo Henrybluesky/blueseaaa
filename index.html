@@ -132,22 +132,28 @@
 		<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 		<![endif]-->
 		<style>
-/* Private Quote button - fixed overlay on Trip.com iframe */
+/* Private Quote button - stable overlay on the original Trip.com iframe */
 .private-quote-wrapper {
     position: relative;
     width: 100%;
+    overflow: visible;
 }
 
+/* Keep the original Trip.com iframe fully visible and in its own layer. */
 .private-quote-wrapper iframe {
+    position: relative;
+    z-index: 1;
     display: block;
     width: 100%;
+    height: 200px;
+    border: none;
 }
 
 .private-quote-btn {
     position: absolute;
     top: 42px;
     right: 18px;
-    z-index: 2147483647;
+    z-index: 2;
 
     display: inline-flex;
     align-items: center;
@@ -197,7 +203,7 @@
 /* Keep the button above the Trip.com iframe at all times. */
 .private-quote-wrapper .private-quote-btn {
     position: absolute;
-    z-index: 2147483647;
+    z-index: 2;
 }
 
 /* Mobile */
