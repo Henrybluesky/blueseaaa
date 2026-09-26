@@ -24,6 +24,19 @@
 <link rel="stylesheet" href="../assets/css/style.css">
 <link href="https://fonts.googleapis.com/css?family=Poppins:400,500,600,700" rel="stylesheet">
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebPage","@id":"https://blueseabooking.com/flights/#webpage","url":"https://blueseabooking.com/flights/","name":"Flight Booking Online | Blueseabooking","description":"Search international flight options online with Blueseabooking and request a private flight quote for additional booking support.","isPartOf":{"@id":"https://blueseabooking.com/#website"},"about":{"@id":"https://blueseabooking.com/#organization"},"inLanguage":"en"},{"@type":"Service","name":"Flight Booking Online","provider":{"@id":"https://blueseabooking.com/#organization"},"areaServed":"International","url":"https://blueseabooking.com/flights/"}]}</script>
+<style>
+.trip-fallback-wrap{position:relative;width:100%;min-height:220px;margin:0 0 10px;}
+.trip-fallback-wrap iframe{display:block;width:100%;height:220px;border:0;}
+.trip-fallback{display:none;position:absolute;inset:0;box-sizing:border-box;min-height:220px;padding:55px 18px 18px;text-align:center;background:#f7f9fc;border:1px solid #e3e8ef;border-radius:4px;}
+.trip-fallback-title{margin:0 0 8px;font-size:18px;font-weight:600;color:#333;}
+.trip-fallback-text{margin:0 auto 14px;max-width:650px;font-size:13px;line-height:1.55;color:#666;}
+.trip-fallback-actions{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;}
+.trip-fallback-actions a{display:inline-block;padding:8px 14px;border-radius:3px;text-decoration:none;font-size:12px;font-weight:600;}
+.trip-fallback-open{background:#00a8cc;color:#fff!important;}
+.trip-fallback-quote{background:#fff;color:#333!important;border:1px solid #ccc;}
+.trip-fallback-wrap.trip-fallback-active iframe{visibility:hidden;}
+.trip-fallback-wrap.trip-fallback-active .trip-fallback{display:block;}
+</style>
 </head>
 <body>
 <header class="header-area" style="background:#565a5c;">
@@ -40,7 +53,17 @@
 <h1>Flight Booking Online</h1>
 <p>Search international flight options online with Blueseabooking. Use the flight search below for public online fares, or contact us for a private quote and booking support.</p>
 <h2>International Flight Booking</h2><p>Blueseabooking connects travelers and travel partners with online flight search options and direct support for booking requests. Routes can be researched online, while private quote requests can be sent directly to our team.</p><h2>Online Fare Search and Private Quotes</h2><p>Use the search tool below to check available flight options. If you need help with a specific route, passenger count, date or itinerary, send the details through WhatsApp for a private quote.</p>
+<div class="trip-fallback-wrap" data-trip-fallback-wrap="flight">
 <iframe class="seo-iframe" src="https://www.trip.com/partners/ad/S19944360?Allianceid=10700740&amp;SID=332106111&amp;trip_sub1=" style="width:100%;height:220px;" frameborder="0" scrolling="no" title="Trip.com flight search"></iframe>
+<div class="trip-fallback">
+<p class="trip-fallback-title">Trip.com Search Unavailable</p>
+<p class="trip-fallback-text">Your browser's privacy or ad-blocking protection may be preventing the Trip.com search box from loading.</p>
+<div class="trip-fallback-actions">
+<a class="trip-fallback-open" href="https://www.trip.com/partners/ad/S19944360?Allianceid=10700740&amp;SID=332106111&amp;trip_sub1=" target="_blank" rel="noopener noreferrer">Open Trip.com Search</a>
+<a class="trip-fallback-quote" href="https://wa.me/84797077347?text=Hi%2C%20I%20would%20like%20to%20book%20tickets%20with%20the%20best%20offer." target="_blank" rel="noopener noreferrer">Private Quote</a>
+</div>
+</div>
+</div>
 <p><a class="seo-cta" href="https://wa.me/84797077347?text=Hi%2C%20I%20would%20like%20to%20book%20tickets%20with%20the%20best%20offer." target="_blank" rel="noopener noreferrer">💬 Request a Private Quote</a> <a class="seo-cta secondary" href="../">Back to Blueseabooking</a></p>
 <h2>More Booking Options</h2>
 <ul><li><a href="../booking/">Travel booking</a></li>
@@ -53,5 +76,16 @@
 <footer class="footer-copyright" style="padding-top:35px;">
 <div class="container"><p style="padding:25px 0;text-align:center;">&copy; 2026 Blueseabooking · <a href="mailto:baodanghenry@gmail.com">baodanghenry@gmail.com</a> · <a href="https://wa.me/84797077347" target="_blank" rel="noopener noreferrer">WhatsApp</a></p></div>
 </footer>
+<script>
+(function(){
+'use strict';
+var wrap=document.querySelector('[data-trip-fallback-wrap]');
+if(!wrap)return;
+var frame=wrap.querySelector('iframe'), resolved=false;
+function loaded(){resolved=true;wrap.classList.remove('trip-fallback-active');}
+frame.addEventListener('load',loaded);
+window.setTimeout(function(){if(!resolved)wrap.classList.add('trip-fallback-active');},8000);
+})();
+</script>
 </body>
 </html>

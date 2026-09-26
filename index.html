@@ -17,7 +17,7 @@
 		<title>Travel Booking for Flights, Hotels &amp; Tours | Blueseabooking</title>
 
 
-		<meta name="description" content="Travel booking for flights, hotels and tours in India and Asia with Blueseabooking. Search online options for Vietnam, Thailand, China, Laos and Japan, or request a private travel quote.">
+		<meta name="description" content="Travel booking for flights, hotels and tours in India and Asia with Blueseabooking. Search online flight and hotel options, travel deals and international trip services for Vietnam, Thailand, China, Laos and Japan, or request a private travel quote.">
 		<meta name="author" content="Blueseabooking">
 		<meta name="robots" content="index, follow, max-image-preview:large">
 		<meta name="theme-color" content="#00d8ff">
@@ -27,7 +27,7 @@
 		<meta property="og:type" content="website">
 		<meta property="og:site_name" content="Blueseabooking">
 		<meta property="og:title" content="Travel Booking for Flights, Hotels &amp; Tours | Blueseabooking">
-		<meta property="og:description" content="Travel booking for flights, hotels and tours in India and Asia, with online search and private quote support for international travel.">
+		<meta property="og:description" content="Travel booking for flights, hotels and tours in India and Asia, with online flight and hotel search, travel deals and private quote support for international travel.">
 		<meta property="og:url" content="https://blueseabooking.com/">
 		<meta property="og:image" content="https://blueseabooking.com/assets/og-image.png">
 		<meta property="og:image:width" content="1200">
@@ -557,6 +557,14 @@ html.v14-mobile-trip .private-quote-btn {
             id="S19946229" title="Trip.com hotel search">
             </iframe>
         </div>
+        <div class="trip-fallback" data-trip-fallback="hotel">
+            <p class="trip-fallback-title">Trip.com Search Unavailable</p>
+            <p class="trip-fallback-text">Your browser's privacy or ad-blocking protection may be preventing the Trip.com search box from loading.</p>
+            <div class="trip-fallback-actions">
+                <a class="trip-fallback-open" href="https://www.trip.com/partners/ad/S19946229?Allianceid=10700740&amp;SID=332106111&amp;trip_sub1=" target="_blank" rel="noopener noreferrer">Open Trip.com Search</a>
+                <a class="trip-fallback-quote" href="https://api.whatsapp.com/send?phone=84797077347&amp;text=Hi%2C%20I%20would%20like%20to%20book%20a%20hotel%20with%20the%20best%20offer." target="_self">Private Quote</a>
+            </div>
+        </div>
 
         <!-- Nút Private Quote mở WhatsApp liên hệ trực tiếp -->
         <a
@@ -584,6 +592,14 @@ html.v14-mobile-trip .private-quote-btn {
             scrolling="no"
             id="S19944360" title="Trip.com flight search">
             </iframe>
+        </div>
+        <div class="trip-fallback" data-trip-fallback="flight">
+            <p class="trip-fallback-title">Trip.com Search Unavailable</p>
+            <p class="trip-fallback-text">Your browser's privacy or ad-blocking protection may be preventing the Trip.com search box from loading.</p>
+            <div class="trip-fallback-actions">
+                <a class="trip-fallback-open" href="https://www.trip.com/partners/ad/S19944360?Allianceid=10700740&amp;SID=332106111&amp;trip_sub1=" target="_blank" rel="noopener noreferrer">Open Trip.com Search</a>
+                <a class="trip-fallback-quote" href="https://api.whatsapp.com/send?phone=84797077347&amp;text=Hi%2C%20I%20would%20like%20to%20book%20tickets%20with%20the%20best%20offer." target="_self">Private Quote</a>
+            </div>
         </div>
 
         <!-- Nút Private Quote mở WhatsApp liên hệ trực tiếp -->
@@ -1369,6 +1385,44 @@ Henry</a></p>
     if (window.jQuery) {
         window.jQuery(document).on('shown.bs.tab', 'a[data-toggle="tab"]', scheduleTripSizing);
     }
+})();
+</script>
+
+<!-- V16: detect a blocked/non-loading Trip.com iframe and show a useful fallback. -->
+<script>
+(function () {
+    'use strict';
+    var TIMEOUT = 8000;
+    function setupFallback(wrapper) {
+        var frame = wrapper.querySelector('iframe');
+        var fallback = wrapper.querySelector('.trip-fallback');
+        if (!frame || !fallback) return;
+        var timer = null;
+        var resolved = false;
+        function markLoaded() {
+            resolved = true;
+            if (timer) window.clearTimeout(timer);
+            wrapper.classList.remove('trip-fallback-active');
+        }
+        function showFallback() {
+            if (resolved) return;
+            wrapper.classList.add('trip-fallback-active');
+        }
+        frame.addEventListener('load', function () {
+            markLoaded();
+            window.setTimeout(function () {
+                if (!resolved) showFallback();
+            }, 150);
+        }, { once: false });
+        timer = window.setTimeout(showFallback, TIMEOUT);
+        /* A late successful load always wins over the fallback. */
+        frame.addEventListener('load', markLoaded);
+    }
+    function init() {
+        document.querySelectorAll('.private-quote-wrapper').forEach(setupFallback);
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+    else init();
 })();
 </script>
 </body>
