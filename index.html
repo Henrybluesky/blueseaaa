@@ -132,7 +132,7 @@
 		<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 		<![endif]-->
 		<style>
-/* Private Quote button overlay(open WhatsApp Chat trực tiếp-ChatGPT)*/
+/* Private Quote button - fixed overlay on Trip.com iframe */
 .private-quote-wrapper {
     position: relative;
     width: 100%;
@@ -147,12 +147,13 @@
     position: absolute;
     top: 42px;
     right: 18px;
-    z-index: 9999;
+    z-index: 2147483647;
 
     display: inline-flex;
     align-items: center;
     justify-content: center;
 
+    margin: 0;
     padding: 10px 20px;
 
     background: #4f6fe8;
@@ -169,48 +170,45 @@
     white-space: nowrap;
 
     cursor: pointer;
-
-    /* blinking / attention effect */
-    animation: privateQuoteBlink 1.5s infinite;
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+    box-shadow: none !important;
+    pointer-events: auto !important;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-user-select: none;
+    user-select: none;
 }
 
-.private-quote-btn:hover {
+.private-quote-btn:hover,
+.private-quote-btn:focus,
+.private-quote-btn:active,
+.private-quote-btn:visited {
     background: #385bd4;
     color: #ffffff !important;
     text-decoration: none !important;
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+    box-shadow: none !important;
 }
 
-@keyframes privateQuoteBlink {
-    0% {
-        opacity: 1;
-        transform: scale(1);
-        box-shadow: 0 0 0 0 rgba(79, 111, 232, 0.7);
-    }
-
-    50% {
-        opacity: 0.72;
-        transform: scale(1.04);
-        box-shadow: 0 0 0 8px rgba(79, 111, 232, 0);
-    }
-
-    100% {
-        opacity: 1;
-        transform: scale(1);
-        box-shadow: 0 0 0 0 rgba(79, 111, 232, 0);
-    }
+/* Keep the button above the Trip.com iframe at all times. */
+.private-quote-wrapper .private-quote-btn {
+    position: absolute;
+    z-index: 2147483647;
 }
 
 /* Mobile */
 @media (max-width: 600px) {
-
     .private-quote-btn {
-        top: 10px;
-        right: 10px;
+        top: 42px;
+        right: 12px;
         padding: 7px 12px;
         font-size: 11px;
         border-width: 1px;
     }
-
 }
 </style>
 <!-- Căn cột About trong Footer thẳng hàng với 3 cột còn lại-ChatGPT -->
@@ -494,9 +492,8 @@
 
         <!-- Nút Private Quote mở WhatsApp liên hệ trực tiếp -->
         <a
-            href="https://wa.me/84797077347?text=Hi%2C%20I%20would%20like%20to%20book%20a%20hotel%20with%20the%20best%20offer."
-            target="_blank"
-            rel="noopener noreferrer"
+            href="https://api.whatsapp.com/send?phone=84797077347&text=Hi%2C%20I%20would%20like%20to%20book%20a%20hotel%20with%20the%20best%20offer."
+            target="_self"
             class="private-quote-btn">
             💬 Private Quote
         </a>
@@ -521,9 +518,8 @@
 
         <!-- Nút Private Quote mở WhatsApp liên hệ trực tiếp -->
         <a
-            href="https://wa.me/84797077347?text=Hi%2C%20I%20would%20like%20to%20book%20tickets%20with%20the%20best%20offer."
-            target="_blank"
-            rel="noopener noreferrer"
+            href="https://api.whatsapp.com/send?phone=84797077347&text=Hi%2C%20I%20would%20like%20to%20book%20tickets%20with%20the%20best%20offer."
+            target="_self"
             class="private-quote-btn">
             💬 Private Quote
         </a>
