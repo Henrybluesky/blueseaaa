@@ -206,14 +206,88 @@
     z-index: 2;
 }
 
-/* Mobile */
-@media (max-width: 600px) {
+/* Keep Book Now visually identical when rendered as a direct WhatsApp link. */
+.book-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none !important;
+    cursor: pointer;
+}
+.book-btn:hover,
+.book-btn:focus,
+.book-btn:active,
+.book-btn:visited {
+    text-decoration: none !important;
+}
+
+/* V10 hero: remove the Explore Now area and bring the search box closer. */
+.about-us {
+    min-height: 650px;
+    background-position: center 62%;
+}
+.about-us-content {
+    margin: -70px 0 0 0;
+}
+.single-about-us .about-btn {
+    display: none !important;
+}
+
+/* V13 Trip.com responsive frame.
+   Desktop/Windows: keep the exact V9 iframe behaviour: 100% wide, 200px high, no scaling.
+   Mobile browsers: give the Trip.com document a fixed wide viewport and scale the COMPLETE
+   iframe as one unit so the search controls are not clipped on the right.
+   The mobile rule is limited to touch devices; Desktop Site mode normally exposes a wide viewport. */
+.trip-embed-frame {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    overflow: visible;
+}
+.trip-embed-frame iframe {
+    position: relative;
+    display: block;
+    width: 100% !important;
+    height: 200px !important;
+    border: 0;
+    transform: none;
+    transform-origin: top left;
+}
+
+/* Real mobile/touch viewport only. Desktop Windows remains exactly like V9. */
+@media (max-width: 767px) and (hover: none) and (pointer: coarse) {
+    .trip-embed-frame {
+        width: 100%;
+        height: calc(200px * ((100vw - 20px) / 1024));
+        min-height: 60px;
+        overflow: hidden;
+    }
+    .trip-embed-frame iframe {
+        width: 1024px !important;
+        height: 200px !important;
+        max-width: none !important;
+        transform: scale(calc((100vw - 20px) / 1024));
+        transform-origin: top left;
+    }
     .private-quote-btn {
-        top: 42px;
+        top: 12px;
         right: 12px;
         padding: 7px 12px;
         font-size: 11px;
         border-width: 1px;
+        z-index: 3;
+    }
+}
+
+@media (max-width: 440px) and (hover: none) and (pointer: coarse) {
+    .trip-embed-frame {
+        height: calc(200px * ((100vw - 16px) / 1024));
+    }
+    .trip-embed-frame iframe {
+        width: 1024px !important;
+        height: 200px !important;
+        transform: scale(calc((100vw - 16px) / 1024));
+        transform-origin: top left;
     }
 }
 </style>
@@ -264,8 +338,7 @@
 										<li class="smooth-menu"><a href="#blog">About</a></li>
 										<li class="smooth-menu"><a href="#subs">Contact</a></li>
 										<li>
-											<button class="book-btn">book now
-											</button>
+											<a class="book-btn" href="https://api.whatsapp.com/send?phone=84797077347&amp;text=Hi%2C%20I%20would%20like%20to%20book%20with%20the%20best%20offer." target="_self" rel="noopener">book now</a>
 										</li><!--/.project-btn--> 
 									</ul>
 								</div><!-- /.navbar-collapse -->
@@ -291,11 +364,6 @@
 									<h1>
 												The best price for your journey!
 											</h1>
-									<div class="about-btn">
-										<button  class="about-view">
-											explore now
-										</button>
-									</div><!--/.about-btn-->
 								</div><!--/.about-us-txt-->
 							</div><!--/.single-about-us-->
 						</div><!--/.col-->
@@ -488,13 +556,15 @@
 
     <div class="trip-hotel-search private-quote-wrapper">
 
-        <iframe
+        <div class="trip-embed-frame">
+            <iframe
             src="https://www.trip.com/partners/ad/S19946229?Allianceid=10700740&SID=332106111&trip_sub1="
             style="width:100%;height:200px;border:none;"
             frameborder="0"
             scrolling="no"
             id="S19946229" title="Trip.com hotel search">
-        </iframe>
+            </iframe>
+        </div>
 
         <!-- Nút Private Quote mở WhatsApp liên hệ trực tiếp -->
         <a
@@ -514,13 +584,15 @@
 
     <div class="trip-flight-search private-quote-wrapper">
 
-        <iframe
+        <div class="trip-embed-frame">
+            <iframe
             src="https://www.trip.com/partners/ad/S19944360?Allianceid=10700740&SID=332106111&trip_sub1="
             style="width:100%;height:200px;border:none;"
             frameborder="0"
             scrolling="no"
             id="S19944360" title="Trip.com flight search">
-        </iframe>
+            </iframe>
+        </div>
 
         <!-- Nút Private Quote mở WhatsApp liên hệ trực tiếp -->
         <a
@@ -1171,6 +1243,9 @@ Henry</a></p>
 
 
 
+
+
+		
 
 		<script src="assets/js/jquery.js"></script>
 		<!-- Include all compiled plugins (below), or include individual files as needed -->
