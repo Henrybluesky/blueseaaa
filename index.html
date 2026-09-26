@@ -233,62 +233,54 @@
     display: none !important;
 }
 
-/* V13 Trip.com responsive frame.
-   Desktop/Windows: keep the exact V9 iframe behaviour: 100% wide, 200px high, no scaling.
-   Mobile browsers: give the Trip.com document a fixed wide viewport and scale the COMPLETE
-   iframe as one unit so the search controls are not clipped on the right.
-   The mobile rule is limited to touch devices; Desktop Site mode normally exposes a wide viewport. */
+/* V14 Trip.com responsive frame.
+   The Trip.com page is a third-party iframe, so the parent page cannot read or
+   change its internal controls. Instead, V14 gives the iframe a fixed 1024px
+   internal canvas on real mobile browsers and scales that COMPLETE canvas to
+   the actual space available on the phone. This prevents the right side from
+   being clipped while keeping the iframe itself fully interactive.
+   Windows/desktop remains unscaled like V9. */
 .trip-embed-frame {
     position: relative;
     width: 100%;
     height: 200px;
     overflow: visible;
 }
+
 .trip-embed-frame iframe {
     position: relative;
+    z-index: 1;
     display: block;
     width: 100% !important;
     height: 200px !important;
+    max-width: none !important;
     border: 0;
     transform: none;
     transform-origin: top left;
 }
 
-/* Real mobile/touch viewport only. Desktop Windows remains exactly like V9. */
-@media (max-width: 767px) and (hover: none) and (pointer: coarse) {
-    .trip-embed-frame {
-        width: 100%;
-        height: calc(200px * ((100vw - 20px) / 1024));
-        min-height: 60px;
-        overflow: hidden;
-    }
-    .trip-embed-frame iframe {
-        width: 1024px !important;
-        height: 200px !important;
-        max-width: none !important;
-        transform: scale(calc((100vw - 20px) / 1024));
-        transform-origin: top left;
-    }
-    .private-quote-btn {
-        top: 12px;
-        right: 12px;
-        padding: 7px 12px;
-        font-size: 11px;
-        border-width: 1px;
-        z-index: 3;
-    }
+/* V14 JS adds this class only on a real mobile/touch browser. */
+html.v14-mobile-trip .trip-embed-frame {
+    overflow: hidden;
 }
 
-@media (max-width: 440px) and (hover: none) and (pointer: coarse) {
-    .trip-embed-frame {
-        height: calc(200px * ((100vw - 16px) / 1024));
-    }
-    .trip-embed-frame iframe {
-        width: 1024px !important;
-        height: 200px !important;
-        transform: scale(calc((100vw - 16px) / 1024));
-        transform-origin: top left;
-    }
+html.v14-mobile-trip .trip-embed-frame iframe {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1024px !important;
+    height: 200px !important;
+    max-width: none !important;
+    transform-origin: top left;
+}
+
+html.v14-mobile-trip .private-quote-btn {
+    top: 12px;
+    right: 12px;
+    padding: 7px 12px;
+    font-size: 11px;
+    border-width: 1px;
+    z-index: 3;
 }
 </style>
 <!-- Căn cột About trong Footer thẳng hàng với 3 cột còn lại-ChatGPT -->
@@ -1285,6 +1277,99 @@ Henry</a></p>
 		<script src="assets/js/custom.js"></script>
 
 
-	</body>
+	
+<!-- V14: scale the COMPLETE Trip.com iframe on real mobile browsers. -->
+<script>
+(function () {
+    'use strict';
+
+    var DESIGN_WIDTH = 1024;
+    var DESIGN_HEIGHT = 200;
+    var MOBILE_CLASS = 'v14-mobile-trip';
+
+    function isRealMobileBrowser() {
+        var ua = navigator.userAgent || '';
+        var hasTouch = (navigator.maxTouchPoints || 0) > 0;
+        var mobileByUA = false;
+
+        if (navigator.userAgentData && typeof navigator.userAgentData.mobile === 'boolean') {
+            mobileByUA = navigator.userAgentData.mobile;
+        } else {
+            mobileByUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile/i.test(ua);
+        }
+
+        /*
+         * Chrome Android with "Desktop site" normally reports a desktop UA
+         * (and userAgentData.mobile=false), so it deliberately stays unscaled.
+         */
+        return hasTouch && mobileByUA;
+    }
+
+    function applyTripSizing() {
+        var mobile = isRealMobileBrowser();
+        document.documentElement.classList.toggle(MOBILE_CLASS, mobile);
+
+        var frames = document.querySelectorAll('.trip-embed-frame');
+        if (!frames.length) return;
+
+        frames.forEach(function (frame) {
+            var iframe = frame.querySelector('iframe');
+            if (!iframe) return;
+
+            if (!mobile) {
+                frame.style.height = DESIGN_HEIGHT + 'px';
+                iframe.style.width = '100%';
+                iframe.style.height = DESIGN_HEIGHT + 'px';
+                iframe.style.transform = 'none';
+                iframe.style.left = '0px';
+                iframe.style.top = '0px';
+                return;
+            }
+
+            /*
+             * Use the real width of the Trip.com container, not 100vw.
+             * This accounts for the page's own margins/padding and guarantees
+             * that the scaled 1024px canvas fits completely inside the box.
+             */
+            var availableWidth = frame.clientWidth;
+            if (!availableWidth) {
+                availableWidth = frame.parentElement ? frame.parentElement.clientWidth : 0;
+            }
+            if (!availableWidth) return;
+
+            var scale = availableWidth / DESIGN_WIDTH;
+            if (scale > 1) scale = 1;
+            if (scale < 0.25) scale = 0.25;
+
+            frame.style.height = Math.ceil(DESIGN_HEIGHT * scale) + 'px';
+            iframe.style.width = DESIGN_WIDTH + 'px';
+            iframe.style.height = DESIGN_HEIGHT + 'px';
+            iframe.style.transform = 'scale(' + scale.toFixed(6) + ')';
+            iframe.style.transformOrigin = 'top left';
+            iframe.style.left = '0px';
+            iframe.style.top = '0px';
+        });
+    }
+
+    function scheduleTripSizing() {
+        window.requestAnimationFrame(function () {
+            applyTripSizing();
+            window.requestAnimationFrame(applyTripSizing);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', scheduleTripSizing);
+    window.addEventListener('load', scheduleTripSizing);
+    window.addEventListener('resize', scheduleTripSizing, { passive: true });
+    window.addEventListener('orientationchange', scheduleTripSizing, { passive: true });
+    window.addEventListener('pageshow', scheduleTripSizing);
+
+    /* Bootstrap 3 event: recalculate when Hotel/Flights tab becomes visible. */
+    if (window.jQuery) {
+        window.jQuery(document).on('shown.bs.tab', 'a[data-toggle="tab"]', scheduleTripSizing);
+    }
+})();
+</script>
+</body>
 
 </html>
